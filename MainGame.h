@@ -26,8 +26,9 @@ constexpr uint8_t viewport_center_height = screen_height / 2;
 constexpr uint8_t viewport_center_width = screen_width / 2;
 
 // The dimensions of the tiles
-constexpr uint8_t tileWidth = 18;
+constexpr uint8_t tileWidth = 19;
 constexpr uint8_t tileHeight = 19;
+//constexpr uint8_t tileHeight = 9;
 
 // The dimensions of the map
 constexpr uint8_t mapHeight = 32;
