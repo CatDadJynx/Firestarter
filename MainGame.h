@@ -3,10 +3,15 @@
 Arduboy2 arduboy;
 #include "GameSprites.h"
 
-// Changes to make:
-// - Create pause function on B button press and call drawMap function in it
-// - Create functions toIso and toCart to go to and from Isometric/Cartesian
-// - Draw new map tiles using toIso (and probably an enum due to how theyre stored in memory?)
+// To do list:
+//- Add roads
+//- Change mini map and isometric map to keep location in sync
+//- Looping map?
+//- Building class/states?
+//- Add player
+//- Add fire
+//- Add police
+//- Add firefighters?
 
 class Vector {
   public:
@@ -37,8 +42,6 @@ constexpr uint8_t mapWidth = 32;
 // A 2D array of tiles, represented with 'TileType'
 TileType tileMap[mapHeight][mapWidth] {};
 
-// Though it would be better to introduce a named function so you don’t forget what this code actually does:
-
 inline uint8_t getSpriteHeight(const uint8_t * sprite)
 {
   return pgm_read_byte(&sprite[1]);
@@ -48,36 +51,6 @@ inline uint8_t getSpriteWidth(const uint8_t * sprite)
 {
   return pgm_read_byte(&sprite[0]);
 }
-
-//And thus:
-
-//uint8_t tileHeight = getSpriteHeight(buildingSprite);
-//uint8_t tileWidth = getSpriteWidth(buildingSprite);
-
-//From which you could then adjust drawY to draw your buildings at the appropriate position.
-//(I’m going to let you figure out how to do the adjustment, purely to give you chance to check your understanding of how the isometric rendering works.)
-
-
-  
-/*
-im thinking i should change my tileWidth and tileHeight back (since i shouldn’t have replaced them lol) 
-then use my getSpriteWidth/Height functions to return the actual size of my sprites and try to use them in figuring out my height adjustment…
------
-Yes. This is correct.
-Now all that remains is to figure out how to adjust the height.
-You might actually find it easier to work out if you fixed your images’ masks first so the transparent parts are actually transparent.
-
-
- */
-
-
-
-
-
-
-
-
-
 
 /*
 //Create timer
