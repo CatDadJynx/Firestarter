@@ -5,21 +5,22 @@ Done:
 - [x] Draw isometric tiles
 
 To do:
-- [] Add roads
-- [] Looping map?
-- [] Optimize draw functions to only render onscreen tiles?
-- [] Building class/states?
-- [] Add player
-- [] Add fire
-- [] Add police
-- [] Add firefighters (or add their behaviors to police to save space)?
+- [ ] Add roads
+- [ ] Looping map?
+- [ ] Optimize draw functions to only render onscreen tiles?
+- [ ] Building class/states?
+- [ ] Add player
+- [ ] Add fire
+- [ ] Add police
+- [ ] Add firefighters (or add their behaviors to police to save space)?
 
 //Changes to make:
-- [] Create pause function on B button press (using deltatime) and call drawMap function in it or don't pause on button press and sync up isometric and Cartesian coordinates in both maps
-- [] Add blank tile to tile sprites
-##General layout (rough outline)
+- [ ] Create pause function on B button press (using deltatime) and call drawMap function in it or don't pause on button press and sync up isometric and Cartesian coordinates in both maps
+- [ ] Add blank tile to tile sprites
 
-######Gamestates:
+## General layout (rough outline)
+
+##### Gamestates:
 
 **[Menu state]**
 
