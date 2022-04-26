@@ -1,10 +1,10 @@
-Done:
+##### Done:
 - [x] Create camera 
 - [x] Create global coordinate system in Cartesian
 - [x] Draw mini map (on B button press)
 - [x] Draw isometric tiles
 
-To do:
+##### To do:
 - [ ] Add roads
 - [ ] Looping map?
 - [ ] Optimize draw functions to only render onscreen tiles?
@@ -18,9 +18,9 @@ To do:
 - [ ] Create pause function on B button press (using deltatime) and call drawMap function in it or don't pause on button press and sync up isometric and Cartesian coordinates in both maps
 - [ ] Add blank tile to tile sprites
 
-## General layout (rough outline)
+### General layout (rough outline)
 
-##### Gamestates:
+#### Gamestates:
 
 **[Menu state]**
 
