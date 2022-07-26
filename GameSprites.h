@@ -11,6 +11,7 @@ constexpr uint8_t miniBuildings[] PROGMEM =
 
 };
 
+/*
 constexpr uint8_t miniRoads[] PROGMEM = 
 {
   6, 6,
@@ -24,6 +25,7 @@ constexpr uint8_t miniRoads[] PROGMEM =
   0x3f, 0x21, 0x25, 0x21, 0x25, 0x3f,
 
 };
+*/
 
 constexpr uint8_t blankTileWidth = 19;
 constexpr uint8_t blankTileHeight = 9;

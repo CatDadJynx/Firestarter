@@ -98,6 +98,8 @@ constexpr uint8_t const * buildingSprites[]
   building1,
   building2,
   building3,
+  blankTile,
+  //roadTile?
 };
 
 constexpr uint8_t const * buildingMasks[]
