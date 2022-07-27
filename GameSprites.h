@@ -1,14 +1,22 @@
-constexpr uint8_t miniBuildings[] PROGMEM = 
+constexpr uint8_t minimapTileSprites[] PROGMEM = 
 {
   6, 6,
+  //miniBuilding0
   0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x2a,
 
+  //miniBuilding1
   0x3f, 0x00, 0x3f, 0x00, 0x3f, 0x00,
 
+  //miniBuilding2
   0x15, 0x2a, 0x15, 0x2a, 0x15, 0x2a,
 
+  //miniBuilding3
   0x3f, 0x25, 0x29, 0x33, 0x25, 0x3f,
 
+  //mini blank tile sprite
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+
+  //mini road sprites 0, 1, and 2?
 };
 
 /*
@@ -28,6 +36,7 @@ constexpr uint8_t miniRoads[] PROGMEM =
 */
 
 constexpr uint8_t blankTileWidth = 19;
+
 constexpr uint8_t blankTileHeight = 9;
 
 constexpr uint8_t blankTile[] PROGMEM =
@@ -40,7 +49,7 @@ constexpr uint8_t blankTile[] PROGMEM =
 };
 
 constexpr uint8_t building0Width = 19;
-constexpr uint8_t building0Height = 18;
+constexpr uint8_t building0Height = 19;
 
 constexpr uint8_t building0[] PROGMEM
 {
@@ -86,7 +95,7 @@ constexpr uint8_t building1_mask[] PROGMEM
 };
 
 constexpr uint8_t building2Width = 19;
-constexpr uint8_t building2Height = 18;
+constexpr uint8_t building2Height = 19;
 
 constexpr uint8_t building2[] PROGMEM
 {
@@ -133,7 +142,7 @@ constexpr uint8_t building3_mask[] PROGMEM
 
 constexpr uint8_t roads[] PROGMEM =
 {
-  19, 9,
+  18, 9,
   //Intersection
   0x10, 0x10, 0x28, 0x28, 0x44, 0x44, 0x82, 0xaa, 0x01, 0x11, 0x01, 0xaa, 0x82, 0x44, 0x44, 0x28, 0x28, 0x10, 0x10,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

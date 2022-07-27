@@ -3,7 +3,7 @@
 // For uint8_t
 #include <stdint.h>
 
-//Add blank and road tile types
+//Add blank and road tile types to isometric and mini map views
 
 // Represents different tile types
 enum class TileType : uint8_t

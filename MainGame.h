@@ -86,7 +86,13 @@ void drawMiniMap()
       uint8_t tileIndex = toTileIndex(tileType);
 
       // Draw the tile at the calculated position.
-      Sprites::drawOverwrite(drawX, drawY, miniBuildings, tileIndex);
+      Sprites::drawOverwrite(drawX, drawY, minimapTileSprites, tileIndex);
+
+      //Replace 'miniBuildings' and 'miniBlankTile' with one array to hold all mini map sprites (since theyre all the same size)
+      
+      //If tileIndex < 3, drawOverwrite using miniBuildings
+      //If tileIndex == 4, drawOverwrite using miniBlankTile
+
     }
   }
 }
@@ -108,6 +114,8 @@ constexpr uint8_t const * buildingMasks[]
   building1_mask,
   building2_mask,
   building3_mask,
+  //blank tile mask?
+  
 };
 
 void drawIsoMap()
