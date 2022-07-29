@@ -62,8 +62,26 @@ void generateMap()
     {
       // Create a tile value from a random number
       // and assign it to a tile in the tile map.
-      tileMap[tileY][tileX] = fromTileIndex(random());
+      tileMap[tileY][tileX] = fromTileIndex(random(0,5));
     }
+  }
+}
+
+void generateRoads()
+{
+  uint8_t horizontalRoads = 5;
+  uint8_t verticalRoads = 5;
+  uint8_t roadLength = random(5, 10);
+
+  //If i is less than horizontal road count
+  for (uint8_t i; i < horizontalRoads; ++i)
+  {
+    //Get random x and y
+    uint8_t y = random(0,mapHeight);
+    uint8_t x = random(0,mapWidth);
+
+    //Set tile type at that location to road
+    //For road length, increment or decrement horizontal position and set tile to road      
   }
 }
 
@@ -87,12 +105,6 @@ void drawMiniMap()
 
       // Draw the tile at the calculated position.
       Sprites::drawOverwrite(drawX, drawY, minimapTileSprites, tileIndex);
-
-      //Replace 'miniBuildings' and 'miniBlankTile' with one array to hold all mini map sprites (since theyre all the same size)
-      
-      //If tileIndex < 3, drawOverwrite using miniBuildings
-      //If tileIndex == 4, drawOverwrite using miniBlankTile
-
     }
   }
 }
@@ -105,7 +117,7 @@ constexpr uint8_t const * buildingSprites[]
   building2,
   building3,
   blankTile,
-  //roadTile?
+  roadTile,
 };
 
 constexpr uint8_t const * buildingMasks[]
@@ -115,6 +127,7 @@ constexpr uint8_t const * buildingMasks[]
   building2_mask,
   building3_mask,
   //blank tile mask?
+  //road tile mask?
   
 };
 

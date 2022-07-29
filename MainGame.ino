@@ -11,6 +11,7 @@ void setup() {
   arduboy.initRandomSeed();
   //Initialize things here
   generateMap();
+  generateRoads();
 }
 
 uint8_t frame = 0;

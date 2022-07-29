@@ -13,13 +13,13 @@ enum class TileType : uint8_t
   building2,
   building3,
   blankTile,
-  //roadTile,
+  roadTile,
 };
 
 // The number of valid tile types.
 // Note: Be sure to manually update this
 // when introducing new tile types.
-constexpr uint8_t tileCount = 5;
+constexpr uint8_t tileCount = 6;
 
 // Gets a tile type from its corresponding sprite index
 inline constexpr TileType fromTileIndex(uint8_t tileIndex)
@@ -37,3 +37,22 @@ inline constexpr uint8_t toTileIndex(TileType tileType)
   // tile type to its underlying integer representation.
   return static_cast<uint8_t>(tileType);
 }
+
+/*
+inline bool isWalkable(Tile tile)
+{
+  switch(tile)
+  {
+    // Add cases for every
+    // kind of 'walkable' tile
+    case Tile::BlankTile:
+    case Tile::RoadTile:
+      return true;
+      
+    // Assume anything that isn't in
+    // the above case list is not walkable
+    default:
+      return false;
+  }
+}
+*/
