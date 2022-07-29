@@ -117,7 +117,7 @@ constexpr uint8_t const * buildingSprites[]
   building2,
   building3,
   blankTile,
-  roadTile,
+  roadTiles,
 };
 
 constexpr uint8_t const * buildingMasks[]
@@ -127,7 +127,6 @@ constexpr uint8_t const * buildingMasks[]
   building2_mask,
   building3_mask,
   //blank tile mask?
-  //road tile mask?
   
 };
 
