@@ -69,19 +69,28 @@ void generateMap()
 
 void generateRoads()
 {
-  uint8_t horizontalRoads = 5;
-  uint8_t verticalRoads = 5;
+  uint8_t horizontalRoadMax = 5;
+  uint8_t verticalRoadMax = 5;
   uint8_t roadLength = random(5, 10);
 
   //If i is less than horizontal road count
-  for (uint8_t i; i < horizontalRoads; ++i)
+  for (uint8_t i; i < horizontalRoadMax; ++i)
   {
     //Get random x and y
     uint8_t y = random(0,mapHeight);
     uint8_t x = random(0,mapWidth);
+  
+    //For road length, increment or decrement horizontal position and set tile to road    
+    for(uint8_t j; j < roadLength; ++j)
+    {
+      //Set tile type at that location to road
+      // Create a tile value from a random number
+      // and assign it to a tile in the tile map.
+      tileMap[y][x] = fromTileIndex(6);
 
-    //Set tile type at that location to road
-    //For road length, increment or decrement horizontal position and set tile to road      
+      //Edit to increment half sprite width
+      tileMap[y][++x];    
+    }
   }
 }
 
@@ -110,7 +119,7 @@ void drawMiniMap()
 }
   
 // Isometric map tiles
-constexpr uint8_t const * buildingSprites[]
+constexpr uint8_t const * tileSprites[]
 {
   building0,
   building1,
@@ -120,7 +129,7 @@ constexpr uint8_t const * buildingSprites[]
   roadTiles,
 };
 
-constexpr uint8_t const * buildingMasks[]
+constexpr uint8_t const * tileMasks[]
 {
   building0_mask,
   building1_mask,
@@ -153,19 +162,19 @@ void drawIsoMap()
       const uint8_t tileIndex = toTileIndex(tileType);
 
       // Select the building sprite
-      const uint8_t * buildingSprite = buildingSprites[tileIndex];
+      const uint8_t * tileSprite = tileSprites[tileIndex];
       
       // Select the building sprite mask
-      const uint8_t * buildingMask = buildingMasks[tileIndex];
+      const uint8_t * tileMask = tileMasks[tileIndex];
 
       // Get the sprite's height
-      const uint8_t spriteHeight = getSpriteHeight(buildingSprite);
+      const uint8_t spriteHeight = getSpriteHeight(tileSprite);
 
       // Adjust the y position to account for the height of the sprite
       const int16_t adjustedY = (drawY - (spriteHeight - tileHeight));
 
       // Draw the tile at the calculated position.
-      Sprites::drawExternalMask(drawX, adjustedY, buildingSprite, buildingMask, 0, 0);
+      Sprites::drawExternalMask(drawX, adjustedY, tileSprite, tileMask, 0, 0);
     }
   }
 }
