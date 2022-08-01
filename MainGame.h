@@ -69,30 +69,78 @@ void generateMap()
 
 void generateRoads()
 {
-  uint8_t horizontalRoadMax = 5;
-  uint8_t verticalRoadMax = 5;
-  uint8_t roadLength = random(5, 10);
+  constexpr uint8_t horizontalRoadMax = 5;
+  constexpr uint8_t verticalRoadMax = 5;
 
-  //If i is less than horizontal road count
-  for (uint8_t i; i < horizontalRoadMax; ++i)
+  uint8_t roadLength = random(5, 30);
+
+  // If i is less than horizontal road count
+  for (uint8_t i = 0; i < horizontalRoadMax; ++i)
   {
-    //Get random x and y
-    uint8_t y = random(0,mapHeight);
-    uint8_t x = random(0,mapWidth);
-  
-    //For road length, increment or decrement horizontal position and set tile to road    
-    for(uint8_t j; j < roadLength; ++j)
-    {
-      //Set tile type at that location to road
-      // Create a tile value from a random number
-      // and assign it to a tile in the tile map.
-      tileMap[y][x] = fromTileIndex(6);
+    // Get random x and y
+    uint8_t y = random(0, mapHeight);
+    uint8_t x = random(0, mapWidth);
 
-      //Edit to increment half sprite width
-      tileMap[y][++x];    
+    // For road length, increment or decrement horizontal position and set tile to road    
+    for(uint8_t j = 0; j < roadLength; ++j)
+    {
+      // Set tile type at that location to road
+      tileMap[y][x] = TileType::roadTile;
+
+      // Incremement x
+      ++x;
+
+      // If x exceeds the width of the map,
+      if(x >= mapWidth)
+        // stop generating,
+        // otherwise you'll go outside the map
+        break;
     }
   }
 }
+
+inline bool isWalkable(TileType tile)
+{
+  switch(tile)
+  {
+    // Add cases for every
+    // kind of 'walkable' tile
+    case TileType::blankTile:
+    case TileType::roadTile:
+      return true;
+      
+    // Assume anything that isn't in
+    // the above case list is not walkable
+    default:
+      return false;
+  }
+}
+
+uint8_t determineRoadType(uint8_t x, uint8_t y)
+{
+  uint8_t roadType = 0;
+
+  if(((x + 1) < mapWidth) && isWalkable(tileMap[y][x + 1]))
+    roadType |= (1 << 0);
+
+  if((x > 0) && isWalkable(tileMap[y][x - 1]))
+    roadType |= (1 << 1);
+
+  if(((y + 1) < mapHeight) && isWalkable(tileMap[y + 1][x]))
+    roadType |= (1 << 2);
+
+  if((y > 0) && isWalkable(tileMap[y - 1][x]))
+    roadType |= (1 << 3);
+    
+  return roadType;
+}
+
+/*if isWalkable(tileMap[y][x])
+{
+  TileType tileType = determineRoadType(y,x);
+  else TileType tileType = tileMap[y][x];
+}
+*/
 
 void drawMiniMap()
 {

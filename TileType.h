@@ -13,7 +13,7 @@ enum class TileType : uint8_t
   building2,
   building3,
   blankTile,
-  roadTiles,
+  roadTile,
 };
 
 // The number of valid tile types.
