@@ -82,8 +82,8 @@ void generateBuildingBlock()
   uint8_t xStart = random(0, mapWidth);
 
   // Get random dimensions
-  uint8_t width = random(2, 8);
-  uint8_t height = random(2, 8);
+  uint8_t width = random(1, 9);
+  uint8_t height = random(1, 9);
 
   for (uint8_t yOffset = 0; yOffset < height; ++yOffset)
   {

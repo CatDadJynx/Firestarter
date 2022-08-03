@@ -11,7 +11,7 @@ void setup() {
   arduboy.initRandomSeed();
   //Initialize things here
   generateRoadBase();
-  generateBuildingBlocks(random(4, 16));
+  generateBuildingBlocks(50);
 }
 
 uint8_t frame = 0;
