@@ -10,8 +10,8 @@ void setup() {
   arduboy.clear();
   arduboy.initRandomSeed();
   //Initialize things here
-  generateMap();
-  generateRoads();
+  generateRoadBase();
+  generateBuildingBlocks(random(4, 16));
 }
 
 uint8_t frame = 0;

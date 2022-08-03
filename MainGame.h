@@ -48,108 +48,126 @@ inline uint8_t getSpriteWidth(const uint8_t * sprite)
   return pgm_read_byte(&sprite[0]);
 }
 
-// Generates a random map by filling the map with random tiles,
+// Generates a random map by filling the map with road tiles,
 // moving from left to right, top to bottom.
 // Called in setup
-
-void generateMap()
+void generateRoadBase()
 {
   // Top to bottom
-  for(uint16_t tileY = 0; tileY < mapHeight; ++tileY)
+  for (uint16_t tileY = 0; tileY < mapHeight; ++tileY)
   {
     // Left to right
-    for(uint16_t tileX = 0; tileX < mapWidth; ++tileX)
+    for (uint16_t tileX = 0; tileX < mapWidth; ++tileX)
     {
-      // Create a tile value from a random number
+      // Create a tile value from road tile index (5)
       // and assign it to a tile in the tile map.
-      tileMap[tileY][tileX] = fromTileIndex(random(0,5));
+      tileMap[tileY][tileX] = fromTileIndex(5);
     }
   }
 }
 
-void generateRoads()
+//building chunks here
+
+TileType generateRandomBuildingTile()
 {
-  constexpr uint8_t horizontalRoadMax = 5;
-  constexpr uint8_t verticalRoadMax = 5;
+  constexpr uint8_t buildingMin = toTileIndex(TileType::building0);
+  constexpr uint8_t buildingMax = toTileIndex(TileType::building3);
+  return fromTileIndex(random(buildingMin, buildingMax));
+}
 
-  uint8_t roadLength = random(5, 30);
+void generateBuildingBlock()
+{
+  // Get random x and y
+  uint8_t yStart = random(0, mapHeight);
+  uint8_t xStart = random(0, mapWidth);
 
-  // If i is less than horizontal road count
-  for (uint8_t i = 0; i < horizontalRoadMax; ++i)
+  // Get random dimensions
+  uint8_t width = random(2, 8);
+  uint8_t height = random(2, 8);
+
+  for (uint8_t yOffset = 0; yOffset < height; ++yOffset)
   {
-    // Get random x and y
-    uint8_t y = random(0, mapHeight);
-    uint8_t x = random(0, mapWidth);
+    uint8_t y = (yStart + yOffset);
 
-    // For road length, increment or decrement horizontal position and set tile to road    
-    for(uint8_t j = 0; j < roadLength; ++j)
+    // Skip y values that are outside the map
+    if (y >= mapHeight)
+      continue;
+
+    for (uint8_t xOffset = 0; xOffset < width; ++xOffset)
     {
-      // Set tile type at that location to road
-      tileMap[y][x] = TileType::roadTile;
+      uint8_t x = (xStart + xOffset);
 
-      // Incremement x
-      ++x;
+      // Skip x values that are outside the map
+      if (x >= mapHeight)
+        continue;
 
-      // If x exceeds the width of the map,
-      if(x >= mapWidth)
-        // stop generating,
-        // otherwise you'll go outside the map
-        break;
+      // Place a random building
+      tileMap[y][x] = generateRandomBuildingTile();
     }
   }
 }
 
+void generateBuildingBlocks(uint8_t count)
+{
+  for (uint8_t amount = 0; amount < count; ++amount)
+    generateBuildingBlock();
+}
+
+/*
 inline bool isWalkable(TileType tile)
 {
-  switch(tile)
+  switch (tile)
   {
     // Add cases for every
     // kind of 'walkable' tile
     case TileType::blankTile:
     case TileType::roadTile:
       return true;
-      
+
     // Assume anything that isn't in
     // the above case list is not walkable
     default:
       return false;
   }
 }
+*/
 
+/*
 uint8_t determineRoadType(uint8_t x, uint8_t y)
 {
   uint8_t roadType = 0;
 
-  if(((x + 1) < mapWidth) && isWalkable(tileMap[y][x + 1]))
+  if (((x + 1) < mapWidth) && isWalkable(tileMap[y][x + 1]))
     roadType |= (1 << 0);
 
-  if((x > 0) && isWalkable(tileMap[y][x - 1]))
+  if ((x > 0) && isWalkable(tileMap[y][x - 1]))
     roadType |= (1 << 1);
 
-  if(((y + 1) < mapHeight) && isWalkable(tileMap[y + 1][x]))
+  if (((y + 1) < mapHeight) && isWalkable(tileMap[y + 1][x]))
     roadType |= (1 << 2);
 
-  if((y > 0) && isWalkable(tileMap[y - 1][x]))
+  if ((y > 0) && isWalkable(tileMap[y - 1][x]))
     roadType |= (1 << 3);
-    
+
   return roadType;
 }
+*/
 
 /*if isWalkable(tileMap[y][x])
-{
+  {
   TileType tileType = determineRoadType(y,x);
   else TileType tileType = tileMap[y][x];
-}
+  }
 */
 
 void drawMiniMap()
 {
-  for(uint8_t y = 0; y < mapHeight; ++y)
+  for (uint8_t y = 0; y < mapHeight; ++y)
   {
     // Calculate the y position to draw the tile at, 6 is tile height
     int16_t drawY = ((y * 6) - camera.y);
-    
-    for(uint8_t x = 0; x < mapWidth; ++x)
+
+    for (uint8_t x = 0; x < mapWidth; ++x)
     {
       // Calculate the x position to draw the tile at, 6 is tile width:
       int16_t drawX = ((x * 6) - camera.x);
@@ -165,7 +183,7 @@ void drawMiniMap()
     }
   }
 }
-  
+
 // Isometric map tiles
 constexpr uint8_t const * tileSprites[]
 {
@@ -184,14 +202,14 @@ constexpr uint8_t const * tileMasks[]
   building2_mask,
   building3_mask,
   //blank tile mask?
-  
+
 };
 
 void drawIsoMap()
 {
-  for(uint8_t tileY = 0; tileY < mapHeight; ++tileY)
+  for (uint8_t tileY = 0; tileY < mapHeight; ++tileY)
   {
-    for(uint8_t tileX = 0; tileX < mapWidth; ++tileX)
+    for (uint8_t tileX = 0; tileX < mapWidth; ++tileX)
     {
       // Calculate the x position to draw the tile at.
       const int16_t isometricX = (((tileX * tileWidth) / 2) - ((tileY * tileWidth) / 2));
@@ -211,7 +229,7 @@ void drawIsoMap()
 
       // Select the building sprite
       const uint8_t * tileSprite = tileSprites[tileIndex];
-      
+
       // Select the building sprite mask
       const uint8_t * tileMask = tileMasks[tileIndex];
 
