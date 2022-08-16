@@ -48,25 +48,7 @@ inline uint8_t getSpriteWidth(const uint8_t * sprite)
   return pgm_read_byte(&sprite[0]);
 }
 
-// Generates a random map by filling the map with road tiles,
-// moving from left to right, top to bottom.
-// Called in setup
-void generateRoadBase()
-{
-  // Top to bottom
-  for (uint16_t tileY = 0; tileY < mapHeight; ++tileY)
-  {
-    // Left to right
-    for (uint16_t tileX = 0; tileX < mapWidth; ++tileX)
-    {
-      // Create a tile value from road tile index (5)
-      // and assign it to a tile in the tile map.
-      tileMap[tileY][tileX] = fromTileIndex(5);
-    }
-  }
-}
 
-//building chunks here
 
 TileType generateRandomBuildingTile()
 {
@@ -75,43 +57,117 @@ TileType generateRandomBuildingTile()
   return fromTileIndex(random(buildingMin, buildingMax));
 }
 
-void generateBuildingBlock()
+//char city[32][32];
+
+TileType building = generateRandomBuildingTile();
+
+//Replace with fromTileIndex?
+TileType road = fromTileIndex(5);
+
+void fill(TileType tileType)
 {
-  // Get random x and y
-  uint8_t yStart = random(0, mapHeight);
-  uint8_t xStart = random(0, mapWidth);
+  for(size_t y = 0; y < 32; ++y)
+    for(size_t x = 0; x < 32; ++x)
+      tileMap[y][x] = tileType;
+}
 
-  // Get random dimensions
-  uint8_t width = random(1, 9);
-  uint8_t height = random(1, 9);
+void fillHorizontalLine(uint8_t x, uint8_t y, uint8_t width, TileType tileType)
+{
+  for(size_t offset = 0; offset < width; ++offset)
+    if(x + offset < 32)
+      tileMap[y][x + offset] = tileType;
+}
 
-  for (uint8_t yOffset = 0; yOffset < height; ++yOffset)
+void fillVerticalLine(uint8_t x, uint8_t y, uint8_t height, TileType tileType)
+{
+  for(size_t offset = 0; offset < height; ++offset)
+    if(y + offset < 32)
+      tileMap[y + offset][x] = tileType;
+}
+
+void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth);
+void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth);
+
+void generateSubdivide(uint8_t depth)
+{
+  fill(building);
+  generateVerticalStep(0, 0, 32, 32, depth);
+}
+
+void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth)
+{
+  if(depth == 0)
+    return;
+
+  if(width < 2)
+    return;
+
+  if(height < 3)
+    return;
+
+  const uint8_t division = 1 + (rand() % (height - 2));
+
+  fillHorizontalLine(x, y + division, width, road);
+
+  const uint8_t upperY = y;
+  const uint8_t upperHeight = division;
+
+  const uint8_t lowerY = (y + division + 1);
+  const uint8_t lowerHeight = (height - division - 1);
+
+  generateVerticalStep(x, upperY, width, upperHeight, depth - 1);
+  generateVerticalStep(x, lowerY, width, lowerHeight, depth - 1);
+}
+
+void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth)
+{
+  if(depth == 0)
+    return;
+
+  if(height < 2)
+    return;
+
+  if(width < 3)
+    return;
+
+  const uint8_t division = 1 + (rand() % (width - 2));
+
+  fillVerticalLine(x + division, y, height, road);
+
+  const uint8_t leftX = x;
+  const uint8_t leftWidth = division;
+
+  const uint8_t rightX = (x + division + 1);
+  const uint8_t rightWidth = (width - division - 1);
+
+  generateHorizontalStep(leftX, y, leftWidth, height, depth - 1);
+  generateHorizontalStep(rightX, y, rightWidth, height, depth - 1);
+}
+
+/*void print()
+{
+  for(size_t y = 0; y < 32; ++y)
   {
-    uint8_t y = (yStart + yOffset);
+    for(size_t x = 0; x < 32; ++x)
+      cout << tileMap[y][x];
 
-    // Skip y values that are outside the map
-    if (y >= mapHeight)
-      continue;
-
-    for (uint8_t xOffset = 0; xOffset < width; ++xOffset)
-    {
-      uint8_t x = (xStart + xOffset);
-
-      // Skip x values that are outside the map
-      if (x >= mapHeight)
-        continue;
-
-      // Place a random building
-      tileMap[y][x] = generateRandomBuildingTile();
-    }
+    cout << endl;
   }
 }
+*/
 
-void generateBuildingBlocks(uint8_t count)
+/*int main()
 {
-  for (uint8_t amount = 0; amount < count; ++amount)
-    generateBuildingBlock();
+  generateSubdivide(6);
+  //print();
+
+  cin.get();
 }
+*/
+
+
+
+
 
 /*
 inline bool isWalkable(TileType tile)
