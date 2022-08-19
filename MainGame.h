@@ -57,11 +57,8 @@ TileType generateRandomBuildingTile()
   return fromTileIndex(random(buildingMin, buildingMax));
 }
 
-//char city[32][32];
+//TileType building = generateRandomBuildingTile();
 
-TileType building = generateRandomBuildingTile();
-
-//Replace with fromTileIndex?
 TileType road = fromTileIndex(5);
 
 void fill(TileType tileType)
@@ -90,7 +87,7 @@ void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, u
 
 void generateSubdivide(uint8_t depth)
 {
-  fill(building);
+  fill(generateRandomBuildingTile());
   generateVerticalStep(0, 0, 32, 32, depth);
 }
 
