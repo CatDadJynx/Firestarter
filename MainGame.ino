@@ -10,7 +10,7 @@ void setup() {
   arduboy.clear();
   arduboy.initRandomSeed();
   //Initialize things here
-   generateSubdivide(6);
+   generateSubdivide(20);
   //generateRoadBase();
   //generateBuildingBlocks(20);
 }

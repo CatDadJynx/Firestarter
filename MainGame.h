@@ -49,23 +49,22 @@ inline uint8_t getSpriteWidth(const uint8_t * sprite)
 }
 
 
-
-TileType generateRandomBuildingTile()
+TileType generateRandomTile()
 {
-  constexpr uint8_t buildingMin = toTileIndex(TileType::building0);
-  constexpr uint8_t buildingMax = toTileIndex(TileType::building3);
-  return fromTileIndex(random(buildingMin, buildingMax));
+  constexpr uint8_t tileMin = toTileIndex(TileType::building0);
+  constexpr uint8_t tileMax = toTileIndex(TileType::blankTile);
+  return fromTileIndex(random(tileMin, tileMax));
 }
 
 //TileType building = generateRandomBuildingTile();
 
 TileType road = fromTileIndex(5);
 
-void fill(TileType tileType)
+void fill()
 {
   for(size_t y = 0; y < 32; ++y)
     for(size_t x = 0; x < 32; ++x)
-      tileMap[y][x] = tileType;
+      tileMap[y][x] = generateRandomTile();
 }
 
 void fillHorizontalLine(uint8_t x, uint8_t y, uint8_t width, TileType tileType)
@@ -87,7 +86,7 @@ void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, u
 
 void generateSubdivide(uint8_t depth)
 {
-  fill(generateRandomBuildingTile());
+  fill();
   generateVerticalStep(0, 0, 32, 32, depth);
 }
 
