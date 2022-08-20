@@ -13,6 +13,8 @@ enum class TileType : uint8_t
   building2,
   building3,
   blankTile,
+  //blankTile0,
+  //blankTile1,
   roadTile,
 };
 
@@ -20,6 +22,7 @@ enum class TileType : uint8_t
 // Note: Be sure to manually update this
 // when introducing new tile types.
 constexpr uint8_t tileCount = 6;
+//constexpr uint8_t tileCount = 7;
 
 // Gets a tile type from its corresponding sprite index
 inline constexpr TileType fromTileIndex(uint8_t tileIndex)
