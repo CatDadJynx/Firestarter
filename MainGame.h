@@ -51,14 +51,14 @@ inline uint8_t getSpriteWidth(const uint8_t * sprite)
 TileType generateRandomTile()
 {
   constexpr uint8_t tileMin = toTileIndex(TileType::building0);
-  //constexpr uint8_t tileMax = toTileIndex(TileType::blankTile);
-  constexpr uint8_t tileMax = toTileIndex(TileType::blankTile1);
+  constexpr uint8_t tileMax = toTileIndex(TileType::blankTile);
+  //constexpr uint8_t tileMax = toTileIndex(TileType::blankTile1);
   ////Not inclusive, add 1
   return fromTileIndex(random(tileMin, tileMax + 1));
 }
 
-//TileType road = fromTileIndex(5);
-TileType road = fromTileIndex(6);
+TileType road = fromTileIndex(5);
+//TileType road = fromTileIndex(6);
 
 void fill()
 {
@@ -256,6 +256,7 @@ constexpr uint8_t const * tileMasks[]
   building2_mask,
   building3_mask,
   //blank tile mask?
+  //road tile masks?
 
 };
 
