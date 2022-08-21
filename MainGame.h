@@ -48,17 +48,17 @@ inline uint8_t getSpriteWidth(const uint8_t * sprite)
   return pgm_read_byte(&sprite[0]);
 }
 
-//Inclusive
 TileType generateRandomTile()
 {
   constexpr uint8_t tileMin = toTileIndex(TileType::building0);
-  constexpr uint8_t tileMax = toTileIndex(TileType::blankTile);
-  //constexpr uint8_t tileMax = toTileIndex(TileType::blankTile1);
+  //constexpr uint8_t tileMax = toTileIndex(TileType::blankTile);
+  constexpr uint8_t tileMax = toTileIndex(TileType::blankTile1);
+  ////Not inclusive, add 1
   return fromTileIndex(random(tileMin, tileMax + 1));
 }
 
-TileType road = fromTileIndex(5);
-//TileType road = fromTileIndex(6);
+//TileType road = fromTileIndex(5);
+TileType road = fromTileIndex(6);
 
 void fill()
 {
