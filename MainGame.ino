@@ -9,7 +9,7 @@ void setup() {
   arduboy.begin();
   arduboy.clear();
   arduboy.initRandomSeed();
-  //Initialize things here
+  //More vertical and horizontal steps are performed repeatedly until either a certain ‘depth’ of partitioning steps or the rectangular partition is smaller than a particular size.
   generateSubdivide(15);
 }
 

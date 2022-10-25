@@ -48,6 +48,7 @@ inline uint8_t getSpriteWidth(const uint8_t * sprite)
   return pgm_read_byte(&sprite[0]);
 }
 
+//It starts with the whole rectangular map filled with houses
 TileType generateRandomTile()
 {
   constexpr uint8_t tileMin = toTileIndex(TileType::building0);
@@ -57,9 +58,6 @@ TileType generateRandomTile()
   return fromTileIndex(random(tileMin, tileMax + 1));
 }
 
-TileType road = fromTileIndex(5);
-//TileType road = fromTileIndex(6);
-
 void fill()
 {
   for(size_t y = 0; y < 32; ++y)
@@ -67,6 +65,7 @@ void fill()
       tileMap[y][x] = generateRandomTile();
 }
 
+//Then it picks a random position along the X axis and draws a horizontal line of road tiles at that X coordinate from top to bottom (this is a ‘horizontal step’).
 void fillHorizontalLine(uint8_t x, uint8_t y, uint8_t width, TileType tileType)
 {
   for(size_t offset = 0; offset < width; ++offset)
@@ -84,12 +83,14 @@ void fillVerticalLine(uint8_t x, uint8_t y, uint8_t height, TileType tileType)
 void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth);
 void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth);
 
+//Then it considers the building tiles to the left of that road/partition line to be one rectangular space and the building tiles to the right of that road/partition line to be a second rectangular space.
 void generateSubdivide(uint8_t depth)
 {
   fill();
   generateVerticalStep(0, 0, 32, 32, depth);
 }
 
+//On each rectangular partition it performs a ‘horizontal step’, which is the same thing as a ‘vertical step’, except the road/partition line is drawn along the X axis from left to right (i.e. the random value is chosen along the Y axis). This also causes a partition, which means there are then effectively 4 rectangular building zones.
 void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth)
 {
   if(depth == 0)
@@ -103,7 +104,7 @@ void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height,
 
   const uint8_t division = 1 + (rand() % (height - 2));
 
-  fillHorizontalLine(x, y + division, width, road);
+  fillHorizontalLine(x, y + division, width, TileType::roadTile);
 
   const uint8_t upperY = y;
   const uint8_t upperHeight = division;
@@ -128,7 +129,7 @@ void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, u
 
   const uint8_t division = 1 + (rand() % (width - 2));
 
-  fillVerticalLine(x + division, y, height, road);
+  fillVerticalLine(x + division, y, height, TileType::roadTile);
 
   const uint8_t leftX = x;
   const uint8_t leftWidth = division;
@@ -173,7 +174,7 @@ inline bool isWalkable(TileType tile)
     // Add cases for every
     // kind of 'walkable' tile
     case TileType::blankTile:
-    case TileType::roadTile:
+    case TileType::TileType::roadTileTile:
       return true;
 
     // Assume anything that isn't in
@@ -185,29 +186,29 @@ inline bool isWalkable(TileType tile)
 */
 
 /*
-uint8_t determineRoadType(uint8_t x, uint8_t y)
+uint8_t determineTileType::roadTileType(uint8_t x, uint8_t y)
 {
-  uint8_t roadType = 0;
+  uint8_t TileType::roadTileType = 0;
 
   if (((x + 1) < mapWidth) && isWalkable(tileMap[y][x + 1]))
-    roadType |= (1 << 0);
+    TileType::roadTileType |= (1 << 0);
 
   if ((x > 0) && isWalkable(tileMap[y][x - 1]))
-    roadType |= (1 << 1);
+    TileType::roadTileType |= (1 << 1);
 
   if (((y + 1) < mapHeight) && isWalkable(tileMap[y + 1][x]))
-    roadType |= (1 << 2);
+    TileType::roadTileType |= (1 << 2);
 
   if ((y > 0) && isWalkable(tileMap[y - 1][x]))
-    roadType |= (1 << 3);
+    TileType::roadTileType |= (1 << 3);
 
-  return roadType;
+  return TileType::roadTileType;
 }
 */
 
 /*if isWalkable(tileMap[y][x])
   {
-  TileType tileType = determineRoadType(y,x);
+  TileType tileType = determineTileType::roadTileType(y,x);
   else TileType tileType = tileMap[y][x];
   }
 */
@@ -256,7 +257,7 @@ constexpr uint8_t const * tileMasks[]
   building2_mask,
   building3_mask,
   //blank tile mask?
-  //road tile masks?
+  //TileType::roadTile tile masks?
 
 };
 
