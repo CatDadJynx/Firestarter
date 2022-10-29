@@ -48,7 +48,6 @@ inline uint8_t getSpriteWidth(const uint8_t * sprite)
   return pgm_read_byte(&sprite[0]);
 }
 
-//It starts with the whole rectangular map filled with houses
 TileType generateRandomTile()
 {
   constexpr uint8_t tileMin = toTileIndex(TileType::building0);
@@ -58,6 +57,24 @@ TileType generateRandomTile()
   return fromTileIndex(random(tileMin, tileMax + 1));
 }
 
+/*
+-It starts with the whole rectangular map filled with houses
+-Then it picks a random position along the X axis and draws a vertical line of road tiles at that X coordinate from top to bottom (this is a ‘vertical step’).
+
+//Instead of placing the partition completely randomly, it may be better of have the parition occur randomly up to ‘N’ tiles away from the centre of the area. 
+//E.g. up to 3 tiles away from the centre, so you could end up with anything from -3 to +3 tiles away from the centre, where permitted.
+//You’d need to calculate the centre first, which is probably something like y + ((height - 2) / 2) and x + ((width - 2) / 2), 
+//then calculate a random offset between -n and +n, which is probably something like rand(n * 2) - n, then add them together.
+
+-Then it considers the building tiles to the left of that road/partition line to be one rectangular space 
+and the building tiles to the right of that road/partition line to be a second rectangular space.
+-On each rectangular partition it performs a ‘horizontal step’, which is the same thing as a ‘vertical step’, 
+except the road/partition line is drawn along the X axis from left to right (i.e. the random value is chosen along the Y axis). 
+This also causes a partition, which means there are then effectively 4 rectangular building zones.
+-More vertical and horizontal steps are performed repeatedly until either a certain ‘depth’ of partitioning steps 
+or the rectangular partition is smaller than a particular size.
+*/
+
 void fill()
 {
   for(size_t y = 0; y < 32; ++y)
@@ -65,7 +82,6 @@ void fill()
       tileMap[y][x] = generateRandomTile();
 }
 
-//Then it picks a random position along the X axis and draws a horizontal line of road tiles at that X coordinate from top to bottom (this is a ‘horizontal step’).
 void fillHorizontalLine(uint8_t x, uint8_t y, uint8_t width, TileType tileType)
 {
   for(size_t offset = 0; offset < width; ++offset)
@@ -83,14 +99,12 @@ void fillVerticalLine(uint8_t x, uint8_t y, uint8_t height, TileType tileType)
 void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth);
 void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth);
 
-//Then it considers the building tiles to the left of that road/partition line to be one rectangular space and the building tiles to the right of that road/partition line to be a second rectangular space.
 void generateSubdivide(uint8_t depth)
 {
   fill();
   generateVerticalStep(0, 0, 32, 32, depth);
 }
 
-//On each rectangular partition it performs a ‘horizontal step’, which is the same thing as a ‘vertical step’, except the road/partition line is drawn along the X axis from left to right (i.e. the random value is chosen along the Y axis). This also causes a partition, which means there are then effectively 4 rectangular building zones.
 void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth)
 {
   if(depth == 0)
@@ -101,7 +115,7 @@ void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height,
 
   if(height < 3)
     return;
-
+  //const uint8_t division = 1 + (rand() % height - 2) is what picks the offset at which to divide the Y plane.
   const uint8_t division = 1 + (rand() % (height - 2));
 
   fillHorizontalLine(x, y + division, width, TileType::roadTile);
@@ -126,7 +140,7 @@ void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, u
 
   if(width < 3)
     return;
-
+  //const uint8_t division = 1 + (rand() % width - 2) is what picks the offset at which to divide the X plane
   const uint8_t division = 1 + (rand() % (width - 2));
 
   fillVerticalLine(x + division, y, height, TileType::roadTile);
