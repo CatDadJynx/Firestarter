@@ -118,6 +118,8 @@ void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height,
   //const uint8_t division = 1 + (rand() % height - 2) is what picks the offset at which to divide the Y plane.
   const uint8_t division = 1 + (rand() % (height - 2));
 
+  //E.g. up to 3 tiles away from the centre, so you could end up with anything from -3 to +3 tiles away from the centre, where permitted.
+  //You’d need to calculate the centre first, which is probably something like y + ((height - 2) / 2)
   fillHorizontalLine(x, y + division, width, TileType::roadTile);
 
   const uint8_t upperY = y;
@@ -143,6 +145,8 @@ void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, u
   //const uint8_t division = 1 + (rand() % width - 2) is what picks the offset at which to divide the X plane
   const uint8_t division = 1 + (rand() % (width - 2));
 
+  //E.g. up to 3 tiles away from the centre, so you could end up with anything from -3 to +3 tiles away from the centre, where permitted.
+  //You’d need to calculate the centre first, which is probably something like x + ((width - 2) / 2)
   fillVerticalLine(x + division, y, height, TileType::roadTile);
 
   const uint8_t leftX = x;
