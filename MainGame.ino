@@ -9,7 +9,7 @@ void setup() {
   arduboy.begin();
   arduboy.clear();
   arduboy.initRandomSeed();
-  generateSubdivide(15);
+  generateSubdivide(15, 1);
 }
 
 uint8_t frame = 0;
