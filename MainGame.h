@@ -125,7 +125,7 @@ void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height,
     return;
     
   //Generate random number between -N and N
-  int randomNumber = random(-maxOffset, maxOffset+1);
+  uint8_t randomNumber = random(-maxOffset, maxOffset+1);
   
   //Calculate the position of the line
   const uint8_t division = randomNumber + (height/2);
@@ -158,7 +158,7 @@ void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, u
     return;
     
   //Generate random number between -N and N
-  int randomNumber = random(-maxOffset, maxOffset+1);
+  uint8_t randomNumber = random(-maxOffset, maxOffset+1);
   
   //Calculate the position of the line
   const uint8_t division = randomNumber + (width/2);
