@@ -8,6 +8,7 @@ Arduboy2 arduboy;
 // - Create functions toIso and toCart to go to and from Isometric/Cartesian
 // - Draw new map tiles using toIso (and probably an enum due to how theyre stored in memory?)
 
+
 class Vector {
   public:
     float x = 0;
@@ -91,95 +92,15 @@ void fillVerticalLine(uint8_t x, uint8_t y, uint8_t height, TileType tileType)
       tileMap[y + offset][x] = tileType;
 }
 
-void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t maxOffset);
-void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t maxOffset);
-
-/*
 void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth);
 void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth);
-*/
 
-void generateSubdivide(uint8_t depth, uint8_t maxOffset)
-{
-  fill();
-  generateVerticalStep(0, 0, 32, 32, depth, maxOffset);
-}
-
-/*
 void generateSubdivide(uint8_t depth)
 {
   fill();
   generateVerticalStep(0, 0, 32, 32, depth);
 }
-*/
 
-void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t maxOffset)
-{
-  if(depth == 0)
-    return;
-    
-  if(width < 2)
-    return;
-    
-  if(height < 3)
-    return;
-    
-  //Generate random number between -N and N
-  uint8_t randomNumber = random(-maxOffset, maxOffset+1);
-  
-  //Calculate the position of the line
-  const uint8_t division = randomNumber + (height/2);
-  
-  //Check to make sure the line is within the boundaries of the map
-  if(division < 0 || division > height-2)
-    return;
-  
-  fillHorizontalLine(x, y + division, width, TileType::roadTile);
-
-  const uint8_t upperY = y;
-  const uint8_t upperHeight = division;
-
-  const uint8_t lowerY = (y + division + 1);
-  const uint8_t lowerHeight = (height - division - 1);
-
-  generateVerticalStep(x, upperY, width, upperHeight, depth - 1, maxOffset);
-  generateVerticalStep(x, lowerY, width, lowerHeight, depth - 1, maxOffset);
-}
-
-void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t maxOffset)
-{
-  if(depth == 0)
-    return;
-    
-  if(height < 2)
-    return;
-    
-  if(width < 3)
-    return;
-    
-  //Generate random number between -N and N
-  uint8_t randomNumber = random(-maxOffset, maxOffset+1);
-  
-  //Calculate the position of the line
-  const uint8_t division = randomNumber + (width/2);
-  
-  //Check to make sure the line is within the boundaries of the map
-  if(division < 0 || division > width-2)
-    return;
-  
-  fillVerticalLine(x + division, y, height, TileType::roadTile);
-
-  const uint8_t leftX = x;
-  const uint8_t leftWidth = division;
-
-  const uint8_t rightX = (x + division + 1);
-  const uint8_t rightWidth = (width - division - 1);
-
-  generateHorizontalStep(leftX, y, leftWidth, height, depth - 1, maxOffset);
-  generateHorizontalStep(rightX, y, rightWidth, height, depth - 1, maxOffset);
-}
-
-/*
 void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth)
 {
   if(depth == 0)
@@ -190,14 +111,8 @@ void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height,
 
   if(height < 3)
     return;
-  
-  // Calculate the center of the area
-  const uint8_t center = y + ((height - 2) / 2);
-  // Calculate a random offset between -n and +n
-  uint8_t N = 3;
-  const uint8_t offset = random(N * 2) - N;
-  // Calculate final position of the road/partition line
-  const uint8_t division = center + offset;
+  //const uint8_t division = 1 + (rand() % height - 2) is what picks the offset at which to divide the Y plane.
+  const uint8_t division = 1 + (rand() % (height - 2));
 
   fillHorizontalLine(x, y + division, width, TileType::roadTile);
 
@@ -211,7 +126,6 @@ void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height,
   generateVerticalStep(x, lowerY, width, lowerHeight, depth - 1);
 }
 
-// Modified function
 void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth)
 {
   if(depth == 0)
@@ -222,14 +136,8 @@ void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, u
 
   if(width < 3)
     return;
-
-  // Calculate the center of the area
-  const uint8_t center = x + ((width - 2) / 2);
-  // Calculate a random offset between -n and +n
-  uint8_t N = 3;
-  const uint8_t offset = random(N * 2) - N;
-  // Calculate final position of the road/partition line
-  const uint8_t division = center + offset;
+  //const uint8_t division = 1 + (rand() % width - 2) is what picks the offset at which to divide the X plane
+  const uint8_t division = 1 + (rand() % (width - 2));
 
   fillVerticalLine(x + division, y, height, TileType::roadTile);
 
@@ -242,204 +150,6 @@ void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, u
   generateHorizontalStep(leftX, y, leftWidth, height, depth - 1);
   generateHorizontalStep(rightX, y, rightWidth, height, depth - 1);
 }
-*/
-
-/*
-void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t N)
-{
-  if(depth == 0)
-    return;
-
-  if(width < 2)
-    return;
-
-  if(height < 3)
-    return;
-  
-  //Calculate the centre of the current area
-  const uint8_t centre_x = x + (width - 2) / 2;
-  const uint8_t centre_y = y + (height - 2) / 2;
-  
-  //Calculate the offset of the partition, using the centre as the reference point
-  const int8_t offset = rand() % (N * 2) - N;
-  
-  //Apply the offset to the centre
-  uint8_t division = centre_y + offset;
-  
-  //If the offset is negative and the division is less than 0, set the division to 0 to prevent out of bounds errors
-  if (offset < 0 && division < 0) {
-    division = 0;
-  }
-  
-  //If the offset is positive and the division is greater than the height, set the division to the height - 1 to prevent out of bounds errors
-  if (offset > 0 && division > height) {
-    division = height - 1;
-  }
-  
-  fillHorizontalLine(x, y + division, width, TileType::roadTile);
-
-  const uint8_t upperY = y;
-  const uint8_t upperHeight = division;
-
-  const uint8_t lowerY = (y + division + 1);
-  const uint8_t lowerHeight = (height - division - 1);
-
-  generateVerticalStep(x, upperY, width, upperHeight, depth - 1, N);
-  generateVerticalStep(x, lowerY, width, lowerHeight, depth - 1, N);
-}
-
-void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t N)
-{
-  if(depth == 0)
-    return;
-
-  if(height < 2)
-    return;
-
-  if(width < 3)
-    return;
-  
-  //Calculate the centre of the current area
-  const uint8_t centre_x = x + (width - 2) / 2;
-  const uint8_t centre_y = y + (height - 2) / 2;
-  
-  //Calculate the offset of the partition, using the centre as the reference point
-  int8_t offset = rand() % (N * 2) - N;
-  
-  //Apply the offset to the centre
-  uint8_t division = centre_x + offset;
-  
-  //If the offset is negative and the division is less than 0, set the division to 0 to prevent out of bounds errors
-  if (offset < 0 && division < 0) {
-    division = 0;
-  }
-  
-  //If the offset is positive and the division is greater than the width, set the division to the width - 1 to prevent out of bounds errors
-  if (offset > 0 && division > width) {
-    division = width - 1;
-  }
-  
-  fillVerticalLine(x + division, y, height, TileType::roadTile);
-
-  const uint8_t leftX = x;
-  const uint8_t leftWidth = division;
-
-  const uint8_t rightX = (x + division + 1);
-  const uint8_t rightWidth = (width - division - 1);
-
-  generateHorizontalStep(leftX, y, leftWidth, height, depth - 1, N);
-  generateHorizontalStep(rightX, y, rightWidth, height, depth - 1, N);
-}
-*/
-
-/*
-void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t n)
-{
-  if(depth == 0)
-    return;
-
-  if(width < 2)
-    return;
-
-  if(height < 3)
-    return;
-
-  // Calculate the centre of the area
-  const uint8_t centerY = y + ((height - 2) / 2);
-  const uint8_t centerX = x + ((width - 2) / 2);
-
-  // Calculate a random offset between -n and +n
-  const uint8_t randOffset = random(n * 2) - n;
-
-  // Add them together
-  const uint8_t division = centerY + randOffset;
-
-  fillHorizontalLine(x, division, width, TileType::roadTile);
-
-  const uint8_t upperY = y;
-  const uint8_t upperHeight = division;
-
-  const uint8_t lowerY = (division + 1);
-  const uint8_t lowerHeight = (height - division - 1);
-
-  generateVerticalStep(x, upperY, width, upperHeight, depth - 1, n);
-  generateVerticalStep(x, lowerY, width, lowerHeight, depth - 1, n);
-}
-
-void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t n)
-{
-  if(depth == 0)
-    return;
-
-  if(height < 2)
-    return;
-
-  if(width < 3)
-    return;
-
-  // Calculate the centre of the area
-  const uint8_t centerY = y + ((height - 2) / 2);
-  const uint8_t centerX = x + ((width - 2) / 2);
-
-  // Calculate a random offset between -n and +n
-  const uint8_t randOffset = random(n * 2) - n;
-
-  // Add them together
-  const uint8_t division = centerX + randOffset;
-
-  fillVerticalLine(division, y, height, TileType::roadTile);
-
-  const uint8_t leftX = x;
-  const uint8_t leftWidth = division;
-
-  const uint8_t rightX = (division + 1);
-  const uint8_t rightWidth = (width - division - 1);
-
-  generateHorizontalStep(leftX, y, leftWidth, height, depth - 1, n);
-  generateHorizontalStep(rightX, y, rightWidth, height, depth - 1, n);
-}
-*/
-
-/*
-inline bool isWalkable(TileType tile)
-{
-  switch (tile)
-  {
-    // Add cases for every
-    // kind of 'walkable' tile
-    case TileType::blankTile:
-    case TileType::TileType::roadTileTile:
-      return true;
-    // Assume anything that isn't in
-    // the above case list is not walkable
-    default:
-      return false;
-  }
-}
-*/
-
-/*
-uint8_t determineTileType::roadTileType(uint8_t x, uint8_t y)
-{
-  uint8_t TileType::roadTileType = 0;
-  if (((x + 1) < mapWidth) && isWalkable(tileMap[y][x + 1]))
-    TileType::roadTileType |= (1 << 0);
-  if ((x > 0) && isWalkable(tileMap[y][x - 1]))
-    TileType::roadTileType |= (1 << 1);
-  if (((y + 1) < mapHeight) && isWalkable(tileMap[y + 1][x]))
-    TileType::roadTileType |= (1 << 2);
-  if ((y > 0) && isWalkable(tileMap[y - 1][x]))
-    TileType::roadTileType |= (1 << 3);
-  return TileType::roadTileType;
-}
-*/
-
-/*if isWalkable(tileMap[y][x])
-  {
-  TileType tileType = determineTileType::roadTileType(y,x);
-  else TileType tileType = tileMap[y][x];
-  }
-*/
 
 void drawMiniMap()
 {
@@ -473,8 +183,6 @@ constexpr uint8_t const * tileSprites[]
   building2,
   building3,
   blankTile,
-  //blankTile0,
-  //blankTile1,
   roadTiles,
 };
 
@@ -484,9 +192,6 @@ constexpr uint8_t const * tileMasks[]
   building1_mask,
   building2_mask,
   building3_mask,
-  //blank tile mask?
-  //TileType::roadTile tile masks?
-
 };
 
 void drawIsoMap()
