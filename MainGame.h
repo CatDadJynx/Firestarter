@@ -9,9 +9,9 @@ Arduboy2 arduboy;
 // - Draw new map tiles using toIso (and probably an enum due to how theyre stored in memory?)
 
 class Vector {
-  public:
-    float x = 0;
-    float y = 0;
+public:
+  float x = 0;
+  float y = 0;
 };
 
 // The game camera, represented by the camera's top left coordinates
@@ -29,25 +29,45 @@ constexpr uint8_t viewport_center_width = screen_width / 2;
 constexpr uint8_t tileWidth = 19;
 constexpr uint8_t tileHeight = 9;
 
-// The dimensions of the map
+// The dimensions of the map in tiles
 constexpr uint8_t mapHeight = 24;
 constexpr uint8_t mapWidth = 24;
 
-// A 2D array of tiles, represented with 'TileType'
-TileType tileMap[mapHeight][mapWidth] {};
+/*
+//New Code From HEre...:
+// Map Dimensions (in pixels)
+constexpr uint16_t fullMapWidth = (mapWidth * tileWidth);
+constexpr uint16_t fullMapHeight = (mapHeight * tileHeight);
 
-inline uint8_t getSpriteHeight(const uint8_t * sprite)
-{
+class Vector {
+public:
+  float x = (fullMapWidth / 2);
+  float y = (fullMapHeight / 2);
+};
+
+// The game camera, represented by the camera's top left coordinates
+Vector camera;
+
+// Camera Boundaries
+constexpr int16_t cameraXMinimum = 0;
+constexpr int16_t cameraXMaximum = (fullMapWidth - WIDTH);
+constexpr int16_t cameraYMinimum = 0;
+constexpr int16_t cameraYMaximum = (fullMapHeight - HEIGHT);
+//...To Here
+*/
+
+// A 2D array of tiles, represented with 'TileType'
+TileType tileMap[mapHeight][mapWidth]{};
+
+inline uint8_t getSpriteHeight(const uint8_t* sprite) {
   return pgm_read_byte(&sprite[1]);
 }
 
-inline uint8_t getSpriteWidth(const uint8_t * sprite)
-{
+inline uint8_t getSpriteWidth(const uint8_t* sprite) {
   return pgm_read_byte(&sprite[0]);
 }
 
-TileType generateRandomTile()
-{
+TileType generateRandomTile() {
   constexpr uint8_t tileMin = toTileIndex(TileType::building0);
   constexpr uint8_t tileMax = toTileIndex(TileType::blankTile);
   ////Not inclusive, add 1
@@ -70,24 +90,21 @@ This also causes a partition, which means there are then effectively 4 rectangul
 or the rectangular partition is smaller than a particular size.
 */
 
-void fill()
-{
-  for(size_t y = 0; y < mapHeight; ++y)
-    for(size_t x = 0; x < mapWidth; ++x)
+void fill() {
+  for (size_t y = 0; y < mapHeight; ++y)
+    for (size_t x = 0; x < mapWidth; ++x)
       tileMap[y][x] = generateRandomTile();
 }
 
-void fillHorizontalLine(uint8_t x, uint8_t y, uint8_t width, TileType tileType)
-{
-  for(size_t offset = 0; offset < width; ++offset)
-    if(x + offset < mapWidth)
+void fillHorizontalLine(uint8_t x, uint8_t y, uint8_t width, TileType tileType) {
+  for (size_t offset = 0; offset < width; ++offset)
+    if (x + offset < mapWidth)
       tileMap[y][x + offset] = tileType;
 }
 
-void fillVerticalLine(uint8_t x, uint8_t y, uint8_t height, TileType tileType)
-{
-  for(size_t offset = 0; offset < height; ++offset)
-    if(y + offset < mapHeight)
+void fillVerticalLine(uint8_t x, uint8_t y, uint8_t height, TileType tileType) {
+  for (size_t offset = 0; offset < height; ++offset)
+    if (y + offset < mapHeight)
       tileMap[y + offset][x] = tileType;
 }
 
@@ -99,8 +116,7 @@ void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height,
 void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth);
 */
 
-void generateSubdivide(uint8_t depth, uint8_t maxOffset)
-{
+void generateSubdivide(uint8_t depth, uint8_t maxOffset) {
   fill();
   generateVerticalStep(0, 0, mapWidth, mapHeight, depth, maxOffset);
 }
@@ -113,27 +129,26 @@ void generateSubdivide(uint8_t depth)
 }
 */
 
-void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t maxOffset)
-{
-  if(depth == 0)
+void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t maxOffset) {
+  if (depth == 0)
     return;
-    
-  if(width < 2)
+
+  if (width < 2)
     return;
-    
-  if(height < 3)
+
+  if (height < 3)
     return;
-    
+
   //Generate random number between -N and N
-  int8_t randomNumber = random(-maxOffset, maxOffset+1);
-  
+  int8_t randomNumber = random(-maxOffset, maxOffset + 1);
+
   //Calculate the position of the line
-  const uint8_t division = randomNumber + (height/2);
-  
+  const uint8_t division = randomNumber + (height / 2);
+
   //Check to make sure the line is within the boundaries of the map
-  if(division < 0 || division > height-2)
+  if (division < 0 || division > height - 2)
     return;
-  
+
   fillHorizontalLine(x, y + division, width, TileType::roadTile);
 
   const uint8_t upperY = y;
@@ -146,27 +161,26 @@ void generateHorizontalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height,
   generateVerticalStep(x, lowerY, width, lowerHeight, depth - 1, maxOffset);
 }
 
-void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t maxOffset)
-{
-  if(depth == 0)
+void generateVerticalStep(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t depth, uint8_t maxOffset) {
+  if (depth == 0)
     return;
-    
-  if(height < 2)
+
+  if (height < 2)
     return;
-    
-  if(width < 3)
+
+  if (width < 3)
     return;
-    
+
   //Generate random number between -N and N
-  int8_t randomNumber = random(-maxOffset, maxOffset+1);
-  
+  int8_t randomNumber = random(-maxOffset, maxOffset + 1);
+
   //Calculate the position of the line
-  const uint8_t division = randomNumber + (width/2);
-  
+  const uint8_t division = randomNumber + (width / 2);
+
   //Check to make sure the line is within the boundaries of the map
-  if(division < 0 || division > width-2)
+  if (division < 0 || division > width - 2)
     return;
-  
+
   fillVerticalLine(x + division, y, height, TileType::roadTile);
 
   const uint8_t leftX = x;
@@ -220,15 +234,12 @@ uint8_t determineTileType::roadTileType(uint8_t x, uint8_t y)
   }
 */
 
-void drawMiniMap()
-{
-  for (uint8_t y = 0; y < mapHeight; ++y)
-  {
+void drawMiniMap() {
+  for (uint8_t y = 0; y < mapHeight; ++y) {
     // Calculate the y position to draw the tile at, 6 is tile height
     int16_t drawY = ((y * 6) - camera.y);
 
-    for (uint8_t x = 0; x < mapWidth; ++x)
-    {
+    for (uint8_t x = 0; x < mapWidth; ++x) {
       // Calculate the x position to draw the tile at, 6 is tile width:
       int16_t drawX = ((x * 6) - camera.x);
 
@@ -245,8 +256,7 @@ void drawMiniMap()
 }
 
 // Isometric map tiles
-constexpr uint8_t const * tileSprites[]
-{
+constexpr uint8_t const* tileSprites[]{
   building0,
   building1,
   building2,
@@ -257,8 +267,7 @@ constexpr uint8_t const * tileSprites[]
   roadTiles,
 };
 
-constexpr uint8_t const * tileMasks[]
-{
+constexpr uint8_t const* tileMasks[]{
   building0_mask,
   building1_mask,
   building2_mask,
@@ -267,6 +276,7 @@ constexpr uint8_t const * tileMasks[]
   //TileType::roadTile tile masks?
 };
 
+//New drawIsoMap function to only draw tiles on screen
 void drawIsoMap()
 {
   for (uint8_t tileY = 0; tileY < mapHeight; ++tileY)
@@ -281,7 +291,10 @@ void drawIsoMap()
       const int16_t isometricY = (((tileX * tileHeight) / 2) + ((tileY * tileHeight) / 2));
       const int16_t drawY = (isometricY - camera.y);
 
-      // TODO: Skip off-screen tiles
+      // Skip off-screen tiles
+      if (drawX + tileWidth <= 0 || drawX >= screen_width || drawY + tileHeight <= 0 || drawY >= screen_height) {
+        continue;
+      }
 
       // Read the tile from the map.
       const TileType tileType = tileMap[tileY][tileX];
@@ -306,3 +319,4 @@ void drawIsoMap()
     }
   }
 }
+
