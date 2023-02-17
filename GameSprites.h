@@ -141,7 +141,7 @@ constexpr uint8_t building3_mask[] PROGMEM
 };
 
 constexpr uint8_t roadHeight = 9;
-constexpr uint8_t roadWidth = 18;
+constexpr uint8_t roadWidth = 19;
  
 constexpr uint8_t roadTiles[] PROGMEM =
 {

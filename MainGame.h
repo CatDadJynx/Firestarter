@@ -265,7 +265,6 @@ constexpr uint8_t const * tileMasks[]
   building3_mask,
   //blank tile mask?
   //TileType::roadTile tile masks?
-
 };
 
 void drawIsoMap()
